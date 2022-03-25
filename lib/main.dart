@@ -19,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _tarefasController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List _tarefasLista = [];
 
   late Map<String, dynamic> _ultimoRemovido;
@@ -72,26 +73,38 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _tarefasController,
-                    decoration: const InputDecoration(
-                        labelText: "Nova Tarefa",
-                        labelStyle: TextStyle(color: Colors.blueAccent)),
+          Form(
+            key: _formKey,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      controller: _tarefasController,
+                      decoration: const InputDecoration(
+                          labelText: "Nova Tarefa",
+                          labelStyle: TextStyle(color: Colors.blueAccent)),
+                      validator: (value){
+                        if(value!.isEmpty){
+                          return "Insira sua tarefa";
+                        }
+                      },
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: const Color(0xff448aff)),
-                  onPressed: _addTarefa,
-                  child:
-                      const Text("ADD", style: TextStyle(color: Colors.white)),
-                ),
-              ],
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: const Color(0xff448aff)),
+                    onPressed: (){
+                      if(_formKey.currentState!.validate()){
+                        _addTarefa;
+                      }
+                    },
+                    child:
+                    const Text("ADD", style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
